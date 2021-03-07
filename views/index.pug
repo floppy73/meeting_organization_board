@@ -1,0 +1,58 @@
+extends layout
+
+block content
+  title = title
+  div#eventpage
+    div#outline
+      h2
+        i.far.fa-calendar-alt
+        |ミーティング
+      if isHome
+        ul.tab
+          li
+            a(href='/') すべて
+          li
+            a(href='/?period=3') 〜三日後
+          li
+            a(href='/?period=6') 〜一週間後
+          li
+            a(href='/?period=31') 〜一ヶ月後
+    div#all_events
+      each meeting in Meetings
+        div.event
+          a(href=`/meeting/${meeting.meetingId}`)
+            div.title
+              img(src=`${meeting.user.photoUrl}`)
+              span #{meeting.createdBy ? '@' + meeting.user.username : 'guest'}
+                if meeting.user.playerName
+                  | (#{meeting.user.playerName})
+          if meeting.isPrivate
+            div.private
+              i.fas.fa-lock
+              p クリックで詳細
+                br
+                | (イベント作成者をフォローしていると見ることができます)
+          else
+            dl
+              dt 店舗
+              dd.location #{meeting.location}
+              dt 時間
+              dd #{meeting.date}
+                br 
+                | #{meeting.startTime.substr(0, 5)} - #{meeting.endTime.substr(0, 5)}
+              if meeting.comment
+                dt 一言
+              if meeting.comment.length > 25
+                dd #{meeting.comment.substr(0,25) + '…' }
+              else
+                dd #{meeting.comment}
+    ul#nav_area
+      if pageNum !== 1
+        li
+          a(rel="prev" href=`?page=${pageNum-1}`) #[i.fas.fa-angle-left] 前ページ
+      li #{pageNum}ページ目
+      if pageNum !== maxPageNum
+        li
+          a(rel="next" href=`?page=${pageNum+1}`) 次ページ #[i.fas.fa-angle-right]
+    a(href="/meeting/new")
+      button#add #[img(src="/images/iconmonstr-plus.png", alt="")]

@@ -1,0 +1,59 @@
+extends layout
+
+block content
+    div#new_editor
+        div#outline
+            h2
+                i.fas.fa-flag
+                |ミーティング詳細
+        div#detail_inner
+            div#created_by
+                img(src=`${Meeting.user.photoUrl}`)
+                p @#{Meeting.user.username}
+                    if Meeting.user.playerName
+                        | (#{Meeting.user.playerName})
+            a#share_twitter(href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false" data-size="large" data-text=`${Meeting.location}でシンクロニカしよう！`) Tweet
+            script(async src="https://platform.twitter.com/widgets.js" charset="utf-8")
+            dl
+                dt 店舗
+                dd #{Meeting.location}
+                dt 日時
+                dd #{Meeting.date}
+                   br
+                   | #{Meeting.startTime.substr(0, 5)} - #{Meeting.endTime.substr(0, 5)}
+            if Meeting.comment
+                dt 一言
+                dd.comment #{Meeting.comment}
+            div
+                if !doesCreatorContained
+                    p このミーティングは作成者が参加を取り消しています
+                table#member
+                    tr 
+                        td.heading 行く！
+                        td 
+                            each member in goMember
+                                a(href=`https://twitter.com/${member.user.username}`)
+                                        img(src=`${member.user.photoUrl}`)
+                        td
+                            form(action=`/meeting/${Meeting.meetingId}/status/2`,method="post")
+                                input(type="hidden", name="_csrf", value=csrfToken)
+                                button.normal 自分も行く！
+                    tr
+                        td.heading 行くかも
+                        td
+                            each member in maybeGoMember
+                                a(href=`https://twitter.com/${member.user.username}`)
+                                    img(src=`${member.user.photoUrl}`)
+                        td 
+                            form(action=`/meeting/${Meeting.meetingId}/status/1`,method="post")
+                                input(type="hidden", name="_csrf", value=csrfToken)
+                                button.normal 自分も行くかも
+                if doesUserContained
+                    form#cancel_area(action=`/meeting/${Meeting.meetingId}/status/0`,      method="post")
+                        input(type="hidden", name="_csrf", value=csrfToken)
+                        button.normal#cancel 参加表明を取り消す
+            if isSelf
+                div.delimiter
+                    form(action=`/meeting/${Meeting.meetingId}/delete`, method="post", onSubmit="return checkSubmit()")
+                        input(type="hidden", name="_csrf", value=csrfToken)
+                        button.delete(type="submit") #[i.fas.fa-trash-alt]このミーティングを削除する

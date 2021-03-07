@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  div#new_editor
+    div#detail_inner
+      p= message
+      //- NODE_ENV=developmentのときのみ表示
+      if isDevelopment
+        h3= error.status
+        pre #{error.stack}
+      if error.status == 500
+        p サーバー内部のエラーにより、正しくページを表示できません。しばらく時間をおいてから度アクセスをお願いいたします。
+        p 時間が経っても再度この画面が表示される場合、もしよろしければ(@ri_yu710)までお知らせださい。
+      a(href="/") トップページへ戻る

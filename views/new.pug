@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    div#new_editor
+        div#outline
+            h2 
+                i.fas.fa-pen-nib
+                |ミーティングの新規作成
+            div#detail_inner
+                form(action="/meeting", method="post")
+                    input(type="hidden", name="_csrf", value=csrfToken)
+                    div.form_parts
+                        h4 店舗
+                        input#location_input(type="text", name="location", placeholder="希望店舗を入力してください(複数の際はカンマで区切ってください)" required)
+                    div.form_parts
+                        h4 日時
+                        input(type="date", name="date" required)
+                        input(type="time", name="startTime" required)
+                        | 〜
+                        input(type="time", name="endTime" required)
+                    div.form_parts
+                        h4 一言
+                        textarea#comment_input(name="comment", placeholder="伝えたいことを記入してください")
+                    div.form_parts
+                        label #[input(type="checkbox", name="isPrivate")] フォロワー限定公開にする
+                    div#button_area
+                        button.normal(type="submit") ミーティングを作る！
+                        label #[input(type="checkbox", name="ifShare")] Twitterにも投稿する

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    div#new_editor
+        div#outline
+            h2 設定
+        div#detail_inner
+            form(action="/setting", method="post")
+                input(type="hidden", name="_csrf", value=csrfToken)
+                div.form_parts
+                    h3 プレイヤー名設定
+                    p ゲームプレイ時に使用しているプレイヤー名を設定することができます(任意)。設定された名前はミーティング一覧画面、詳細画面等で表示されます。
+                    if playerName
+                        p 現在 #{playerName} を設定中
+                    input#playername_input(type="text", name="playerName", maxlength="10", placeholder="名前を入力(10文字以内)")
+                button.normal(type="submit") 設定
+

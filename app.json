@@ -1,0 +1,7 @@
+{
+    "name": "SyncMeet",
+    "description": "音楽ゲーム用予定調整サービス",
+    "logo": "",
+    "keywords": ["node"],
+    "image": "heroku/nodejs"
+}
